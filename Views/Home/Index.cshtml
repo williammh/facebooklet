@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model facebooklet.Models.RegisterViewModel
+<h1>Facebooklet</h1>
+<div id="register">
+<form asp-controller="Home" asp-action="Register" method="post">
+    <label asp-for="firstname"></label>
+    <input asp-for="firstname"/>
+    <label asp-for="lastname"></label>
+    <input asp-for="lastname"/>
+    <label asp-for="email"></label>
+    <input asp-for="email"/>
+    <label asp-for="password"></label>
+    <input asp-for="password"/>
+    <label asp-for="confirmpassword"></label>
+    <input asp-for="confirmpassword"/><br>
+    <button type="submit">Register</button>
+</form>
+</div>
+<div id="login">
+    <form action="login" method="post">
+        <label for="email">E-Mail</label>
+        <input type="text" name="email">
+        <label for="password">Password</label>
+        <input type="password" name="password">
+        <input type="submit" value="login">
+    </form>
+</div>
+<div>
+    @{
+        if(ViewBag.valid == false)
+        {
+            foreach(var error in ViewBag.errors)
+            {
+                if(@error.Errors.Count > 0)
+                {
+                    <p>@error.Errors[0].ErrorMessage</p>
+                }
+            }
+        }
+        <p>@ViewBag.Message</p>
+    }
+</div>

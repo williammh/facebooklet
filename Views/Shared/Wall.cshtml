@@ -1,0 +1,65 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model facebooklet.Models.Message
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js">
+                asp-fallback-src="~/lib/jquery/dist/jquery.js"
+                asp-fallback-test="window.jQuery">
+</script>
+<script>
+    $(document).ready(function(){
+        function UpdateComments(id){
+            $.get("/GetComments", {
+                message_id : id
+            },
+            function(response){
+                $("[comments=" + id + "]").html("<div id='" + id + "']></div>");
+                for(var i = 0; i < response.length; i++){
+                    $("[id=" + id + "]").append("<p class='comment'><span class='blue'>" + response[i]["firstname"] + " " + response[i]["lastname"] + "</span> " + response[i]["text"] + "</p><p class='commenttime'>" + ConvertDateTime(response[i]["commentcreatedat"]) + "</p>");
+                }
+            },
+            "json");
+        }
+        function ConvertDateTime(date)
+        {
+            return date.slice(5, 10) + "-" + date.slice(0,4) + " " + date.slice(11);
+        }
+        $(".writecomment").keypress(function(event){
+            if(event.which == 13)
+            {
+                var id = $(this).attr("messageid");
+                $.post("/CreateComment", {
+                    text : $(this).val(),
+                    message_id : id
+                });
+                setTimeout(function(){
+                    UpdateComments(id);
+                }, 10);
+            }
+        });
+        $.get("/GetMessageIDs", function(response){
+            for(var i = 0; i < response.length; i++){
+                UpdateComments(response[i]);
+            }
+        }, "json");
+    });
+</script>
+<h1>Facebooklet</h1>
+<p>Logged in as @ViewBag.loggedinuser <a href="/Logout">Logout</a></p>
+
+<form asp-controller="Message" asp-action="CreateMessage" method="post">
+    <input asp-for="text" placeholder="What's on your mind?"><br>
+    <button type="submit">Post</button>
+</form>
+@{
+    for(int i = 0; i < ViewBag.AllMessages.Count; i++)
+    {
+        <h5><span class="blue">@ViewBag.AllMessages[i]["firstname"] @ViewBag.AllMessages[i]["lastname"]</span> - @ViewBag.AllMessages[i]["messagecreatedat"]</h5>
+        <h3>@ViewBag.AllMessages[i]["text"]</h3>
+        <div comments="@ViewBag.AllMessages[i]["message_id"]">
+            <div id="@ViewBag.AllMessages[i]["message_id"]"></div>
+        </div>
+        <input type="text" placeholder="Write A Comment" class="writecomment" messageid="@ViewBag.AllMessages[i]["message_id"]">
+        <br><br><br><br><br>
+    }
+}

@@ -1,0 +1,27 @@
+/*Write all of your CSS here*/
+#register {
+    /*background-color: lightskyblue;*/
+    display: inline-block;
+}
+#login {
+    vertical-align: top;
+    display: inline-block;
+}
+#login input {
+    display: block;
+}
+.comment {
+    background-color: #f6f7f9;
+    margin-bottom: 0px;
+    margin-left: 20px;
+}
+.commenttime {
+    color: #999999;
+    background-color: #f6f7f9;
+    margin-left: 20px;
+    margin-bottom: 0px;
+}
+.blue {
+    color: #4e5899;
+    font-weight: bold;
+}
